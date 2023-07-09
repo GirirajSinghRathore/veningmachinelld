@@ -1,12 +1,16 @@
 package org.example.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.List;
-
+@Getter
+@Setter
 public class CashModule {
-    private CashModuleStatus cashModuleStatus;
+    private CashModuleStatus cashModuleStatus = CashModuleStatus.FREE;
     private List<Note> noteList;
-    private List<Note> validNotes;
+    private List<Note> validNotes=new ArrayList<>();
     public boolean acceptCash(List<Note> noteList){
         if(cashModuleStatus.equals(CashModuleStatus.BLOCKED)){
             return false;
@@ -16,7 +20,7 @@ public class CashModule {
         for(Note note : noteList){
             boolean valid = false;
             for(Note validNotes: validNotes){
-                if(validNotes.equals(note)){
+                if(validNotes.getValue()==note.getValue()){
                     valid=true;
                     break;
                 }
@@ -28,17 +32,17 @@ public class CashModule {
         this.noteList=noteList;
         return true;
     }
-    int countNotes(){
+    public int countNotes(){
         int n = 0;
         for(Note note:noteList){
             n=n+note.getValue();
         }
         return n;
     }
-    void returnCash(){
+    public void returnCash(){
         noteList=new ArrayList<>();
     }
-    void saveCash(){
+    public void saveCash(){
         noteList=new ArrayList<>();
     }
 }

@@ -32,6 +32,8 @@ public class Main {
                 .slotProuctQuantityMap(slotProuctQuantityMap)
                 .orderList(new ArrayList<>())
                 .screen(new Screen())
+                .dispenser(new Dispenser())
+                .cashModule(new CashModule())
                 .build();
         //----------
 
@@ -39,16 +41,34 @@ public class Main {
             //Making Order
             vendingMachine.getScreen().setText("A1");
             Order order = vendingMachine.getOrder();
-            System.out.println(order.getPrice());
+            System.out.println("Insert amount: "+order.getPrice());
             //Making Payment
             List<Note> notes = new ArrayList<>();
             notes.add(new Note(10));
+            vendingMachine.getCashModule().getValidNotes().add(new Note(10));
+            vendingMachine.acceptCash(notes);
 
-            vendingMachine.getCashModule().acceptCash(notes);
+            vendingMachine.getCashModule().returnCash();
+            vendingMachine.getCashModule().setCashModuleStatus(CashModuleStatus.FREE);
 
-
+            vendingMachine.setVendingMachineStatus(VendingMachineStatus.FREE);
+            vendingMachine
+                    .getCurrentOrder()
+                    .getSlot()
+                    .setSlotStatus(SlotStatus.WORKING);
+            vendingMachine.getDispenser().setDispenserStatus(DispenserStatus.OPEN);
+            vendingMachine.setCurrentOrder(null);
         }catch (Exception e){
-            System.out.println(e);
+            e.printStackTrace();
+            System.out.println("Could not Process your Request Returning Cash"+e);
+            vendingMachine.getCashModule().returnCash();
+            vendingMachine.getCashModule().setCashModuleStatus(CashModuleStatus.FREE);
+
+            vendingMachine.setVendingMachineStatus(VendingMachineStatus.FREE);
+            vendingMachine.getCurrentOrder().getSlot().setSlotStatus(SlotStatus.WORKING);
+            vendingMachine.getDispenser().setDispenserStatus(DispenserStatus.OPEN);
+            vendingMachine.setCurrentOrder(null);
+            System.out.println("Could not Process your Request"+e);
 
         }
 
